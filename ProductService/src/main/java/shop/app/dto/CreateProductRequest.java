@@ -1,29 +1,19 @@
-package shop.app.entity;
+package shop.app.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "products")
-public class ProductEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+public class CreateProductRequest {
     private String article;
     private String name;
     private String description;
     private String category;
     private double price;
     private int quantity;
-    private boolean isAvailable;
 }

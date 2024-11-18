@@ -1,0 +1,27 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ShopApp
+
+  datasource:
+   username: user
+   password: ${PWD}
+   url: jdbc:postgresql://localhost:5432/postgres
+   driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: false
+
+app:
+  scheduling:
+    enable: false
+    priceIncreasePercentage: 1.4
+    optimization: false
