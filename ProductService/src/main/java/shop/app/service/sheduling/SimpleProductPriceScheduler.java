@@ -1,7 +1,6 @@
-package shop.app.sheduling;
+package shop.app.service.sheduling;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,6 +10,7 @@ import shop.app.config.SimpleSchedulerCondition;
 import shop.app.entity.ProductEntity;
 import shop.app.repository.ProductRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -18,14 +18,14 @@ import java.util.List;
 @Conditional(SimpleSchedulerCondition.class)
 public class SimpleProductPriceScheduler {
     @Value("${app.scheduling.priceIncreasePercentage}")
-    private double percentage;
+    private BigDecimal percentage;
     private final ProductRepository productRepository;
 
     @Transactional
     @Scheduled(cron = "0 * * * * *")
     public void simpleUpdater() {
         List<ProductEntity> productEntities = productRepository.findAllProducts().stream()
-                .peek(p -> p.setPrice(p.getPrice() * percentage))
+                .peek(p -> p.setPrice(p.getPrice().multiply(percentage)))
                 .toList();
         productRepository.saveAll(productEntities);
     }

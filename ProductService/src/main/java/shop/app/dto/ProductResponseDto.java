@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import shop.app.entity.CategoryType;
+
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +16,7 @@ public class ProductResponseDto {
     private String article;
     private String name;
     private String description;
-    private String category;
-    private double price;
-    private int quantity;
+    private CategoryType categoryType;
+    private BigDecimal price;
+    private Long quantity;
 }
