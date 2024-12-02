@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  postgres-master:
+    image: postgres:latest
+    container_name: postgres-master
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - pg_network
+
+  postgres-replica:
+    image: postgres:latest
+    container_name: postgres-replica
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    depends_on:
+      - postgres-master
+    ports:
+      - "5433:5432"
+    networks:
+      - pg_network
+    command: >
+      postgres -c wal_level=replica
+               -c max_wal_senders=10
+               -c hot_standby=on
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+networks:
+  pg_network:
+
+volumes:
+  master_data:
+  replica_data:

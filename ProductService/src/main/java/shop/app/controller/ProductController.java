@@ -10,9 +10,12 @@ import shop.app.dto.CreateProductRequest;
 import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
 import shop.app.dto.UpdateProductDto;
+import shop.app.dto.criteria.SearchCriteria;
+import shop.app.entity.ProductEntity;
 import shop.app.mapper.ProductMapper;
 import shop.app.service.ProductService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,5 +51,11 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Page<ProductEntity>> searchProductByCriteria(@RequestBody List<SearchCriteria> list,
+                                                                       @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProductsByCriteria(list, pageable));
     }
 }
