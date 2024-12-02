@@ -16,9 +16,21 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = StringCriterion.class, name = "price")
 })
 public interface SearchCriteria {
+    /**
+     * @return The field name to apply the criterion on
+     */
+    @NotBlank(message = "Field name cannot be blank")
     String getField();
 
+    /**
+     * @return The value to compare against
+     */
+    @NotNull(message = "Criterion value cannot be null")
     Object getValue();
 
+    /**
+     * @return The comparison operation to apply
+     */
+    @NotNull(message = "Operation cannot be null")
     Operation getOperation();
 }
