@@ -4,14 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
+import shop.app.dto.criteria.NumericCriterion;
+import shop.app.dto.criteria.SearchCriteria;
 import shop.app.entity.ProductEntity;
 import shop.app.mapper.ProductMapper;
 import shop.app.repository.ProductRepository;
+import shop.app.service.criteria.SearchSpecification;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -20,6 +25,7 @@ import java.util.UUID;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final SearchSpecification<ProductEntity> searchSpecification;
 
     @Transactional
     public UUID createProduct(ProductDto productDto) {
@@ -52,5 +58,11 @@ public class ProductService {
     @Transactional
     public void deleteProduct(UUID uuid) {
         productRepository.deleteById(uuid);
+    }
+
+    public Page<ProductEntity> getAllProductsByCriteria(List<SearchCriteria> searchCriteria, Pageable pageable) {
+        Specification<ProductEntity> specification = ((root, query, criteriaBuilder) ->
+                searchSpecification.createQueryBySearchCriteria(root, criteriaBuilder, query, searchCriteria));
+        return productRepository.findAll(specification, pageable);
     }
 }
