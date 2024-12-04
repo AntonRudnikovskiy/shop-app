@@ -33,7 +33,7 @@ public class ProductEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
     private CategoryType categoryType;
 
