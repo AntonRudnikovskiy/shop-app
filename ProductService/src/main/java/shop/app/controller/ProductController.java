@@ -11,7 +11,6 @@ import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
 import shop.app.dto.UpdateProductDto;
 import shop.app.dto.criteria.SearchCriteria;
-import shop.app.entity.ProductEntity;
 import shop.app.mapper.ProductMapper;
 import shop.app.service.ProductService;
 
@@ -20,42 +19,42 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/product")
+@RequestMapping("api/v1/")
 public class ProductController {
     private final ProductMapper productMapper;
     private final ProductService productService;
 
-    @PostMapping("/")
+    @PostMapping("/product")
     public ResponseEntity<UUID> createProduct(@RequestBody CreateProductRequest createProductDto) {
         ProductDto productDto = productMapper.toProductDto(createProductDto);
         return ResponseEntity.ok(productService.createProduct(productDto));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
         return ResponseEntity.ok(productService.getProductByUUID(productId));
     }
 
-    @GetMapping("/products")
+    @GetMapping("/product")
     public ResponseEntity<Page<ProductResponseDto>> findAllProducts(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProducts(pageable)
                 .map(productMapper::toProductResponseDto));
     }
 
-    @PutMapping("/")
+    @PutMapping("/product")
     public ResponseEntity<Void> updateProduct(@RequestBody UpdateProductDto updateProductDto) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/product/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Page<ProductEntity>> searchProductByCriteria(@RequestBody List<SearchCriteria> list,
-                                                                       @PageableDefault Pageable pageable) {
+    @PostMapping("/products")
+    public ResponseEntity<Page<ProductResponseDto>> searchProductByCriteria(@RequestBody List<SearchCriteria> list,
+                                                                            @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProductsByCriteria(list, pageable));
     }
 }

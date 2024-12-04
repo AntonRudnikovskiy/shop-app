@@ -6,8 +6,7 @@ public enum Operation {
     GREATER_THAN_OR_EQUAL(">="),
     LESS_THAN_OR_EQUAL("<="),
     LIKE("~"),
-    EQUAL("="),
-    BETWEEN("-");
+    EQUAL("=");
 
     private final String symbol;
 

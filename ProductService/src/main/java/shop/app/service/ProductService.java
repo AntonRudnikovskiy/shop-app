@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
-import shop.app.dto.criteria.NumericCriterion;
 import shop.app.dto.criteria.SearchCriteria;
 import shop.app.entity.ProductEntity;
 import shop.app.mapper.ProductMapper;
@@ -60,9 +59,11 @@ public class ProductService {
         productRepository.deleteById(uuid);
     }
 
-    public Page<ProductEntity> getAllProductsByCriteria(List<SearchCriteria> searchCriteria, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDto> getAllProductsByCriteria(List<SearchCriteria> searchCriteria, Pageable pageable) {
         Specification<ProductEntity> specification = ((root, query, criteriaBuilder) ->
                 searchSpecification.createQueryBySearchCriteria(root, criteriaBuilder, query, searchCriteria));
-        return productRepository.findAll(specification, pageable);
+        return productRepository.findAll(specification, pageable)
+                .map(productMapper::toProductResponseDto);
     }
 }

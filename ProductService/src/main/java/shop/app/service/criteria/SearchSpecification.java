@@ -38,9 +38,13 @@ public class SearchSpecification<T> implements Specification<T> {
             BiFunction<CriteriaBuilder, Root<?>, PredicateFactory> operation = operations
                     .get(criterion.getOperation().name());
 
+            if (operation == null) {
+                throw new IllegalArgumentException("Unsupported operation: " + criterion.getOperation().name());
+            }
+
             PredicateFactory predicateFactory = operation.apply(criteriaBuilder, root);
             predicates.add(predicateFactory.create(criterion.getField(), criterion.getValue()));
         }
-        return criteriaBuilder.and(predicates.toArray(predicates.toArray(new Predicate[0])));
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

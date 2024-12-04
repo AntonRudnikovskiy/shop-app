@@ -38,8 +38,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <addDefaultValue tableName="products" columnName="is_available" defaultValueBoolean="true"/>
     </changeSet>
 
 </databaseChangeLog>
