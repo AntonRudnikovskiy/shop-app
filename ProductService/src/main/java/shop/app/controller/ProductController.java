@@ -24,35 +24,35 @@ public class ProductController {
     private final ProductMapper productMapper;
     private final ProductService productService;
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<UUID> createProduct(@RequestBody CreateProductRequest createProductDto) {
         ProductDto productDto = productMapper.toProductDto(createProductDto);
         return ResponseEntity.ok(productService.createProduct(productDto));
     }
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("/products/{productId}")
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
         return ResponseEntity.ok(productService.getProductByUUID(productId));
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<Page<ProductResponseDto>> findAllProducts(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProducts(pageable)
                 .map(productMapper::toProductResponseDto));
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public ResponseEntity<Void> updateProduct(@RequestBody UpdateProductDto updateProductDto) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{productId}")
+    @DeleteMapping("/products/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/products")
+    @PostMapping("/products/search")
     public ResponseEntity<Page<ProductResponseDto>> searchProductByCriteria(@RequestBody List<SearchCriteria> list,
                                                                             @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProductsByCriteria(list, pageable));

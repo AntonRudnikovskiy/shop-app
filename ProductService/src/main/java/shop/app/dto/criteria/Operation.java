@@ -5,7 +5,9 @@ import java.util.Arrays;
 public enum Operation {
     GREATER_THAN_OR_EQUAL(">="),
     LESS_THAN_OR_EQUAL("<="),
-    LIKE("~"),
+    LIKE_TEXT("~"),
+    LIKE_NUMBER("$"),
+    LIKE_DATA("-"),
     EQUAL("=");
 
     private final String symbol;
