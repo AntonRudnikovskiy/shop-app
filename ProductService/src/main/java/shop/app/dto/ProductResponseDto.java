@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import shop.app.entity.CategoryType;
+import shop.app.entity.CurrencyType;
 
 import java.math.BigDecimal;
 
@@ -19,4 +20,5 @@ public class ProductResponseDto {
     private CategoryType categoryType;
     private BigDecimal price;
     private Long quantity;
+    private CurrencyType currencyType;
 }
