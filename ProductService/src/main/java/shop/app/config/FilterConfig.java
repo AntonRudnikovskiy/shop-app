@@ -4,7 +4,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import shop.app.controller.CurrencyHeaderFilter;
-import shop.app.service.сurrency.CurrencyProvider;
+import shop.app.service.currency.CurrencyProvider;
 
 @Configuration
 public class FilterConfig {

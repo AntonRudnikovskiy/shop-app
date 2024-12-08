@@ -40,7 +40,7 @@ exchange-rate:
 
 
 currency-service:
-  host: http://localhost:8080
+  host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
   timeout: 1000
   retry: 3
   methods:

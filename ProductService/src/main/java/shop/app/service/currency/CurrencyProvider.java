@@ -1,4 +1,4 @@
-package shop.app.service.сurrency;
+package shop.app.service.currency;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,5 @@ import org.springframework.web.context.annotation.SessionScope;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CurrencyProvider {
-    private String currencyRate;
+    private String currencyCode;
 }

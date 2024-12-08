@@ -1,4 +1,4 @@
-package shop.app.service.сurrency;
+package shop.app.service.currency;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final ExchangeRateCache exchangeRateCache;
 
     public Pair<String, BigDecimal> getExchangeRate(BigDecimal price) {
-        String providerCurrency = currencyProvider.getCurrencyRate();
+        String providerCurrency = currencyProvider.getCurrencyCode();
         if (providerCurrency.equals(CurrencyType.RUB.name())) {
             return Pair.of(CurrencyType.RUB.name(), price);
         }

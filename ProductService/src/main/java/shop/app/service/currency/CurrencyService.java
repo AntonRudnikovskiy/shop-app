@@ -1,4 +1,4 @@
-package shop.app.service.сurrency;
+package shop.app.service.currency;
 
 import org.springframework.data.util.Pair;
 

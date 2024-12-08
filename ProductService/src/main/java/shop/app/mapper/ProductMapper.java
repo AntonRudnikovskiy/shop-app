@@ -7,12 +7,12 @@ import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
 import shop.app.entity.CurrencyType;
 import shop.app.entity.ProductEntity;
-import shop.app.service.сurrency.CurrencyServiceImpl;
+import shop.app.service.currency.CurrencyService;
 
 @Component
 @RequiredArgsConstructor
 public class ProductMapper {
-    private final CurrencyServiceImpl currencyService;
+    private final CurrencyService currencyService;
 
     public ProductDto toProductDto(CreateProductRequest productRequest) {
         return ProductDto.builder()
