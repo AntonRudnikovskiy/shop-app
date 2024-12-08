@@ -33,7 +33,7 @@ public class ExchangeRateCache {
                 .onStatus(HttpStatusCode::is5xxServerError,
                         response -> response.bodyToMono(String.class)
                                 .map(body -> new CurrencyServiceException(
-                                        "Currency service error: " + response.statusCode() + " " + body)))
+                                        "Currency service error: " + response.statusCode())))
                 .bodyToMono(CurrencyRates.class)
                 .retryWhen(Retry.fixedDelay(retry, Duration.ofSeconds(2))
                         .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) ->
