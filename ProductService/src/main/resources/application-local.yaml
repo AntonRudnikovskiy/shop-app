@@ -17,7 +17,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
@@ -31,6 +31,17 @@ spring:
 
 app:
   scheduling:
-    enable: true
+    enable: false
     priceIncreasePercentage: 10.1
-    optimization: true
+    optimization: false
+
+exchange-rate:
+  file-name: exchange-rate.json
+
+
+currency-service:
+  host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
+  timeout: 1000
+  retry: 3
+  methods:
+    get-currency: /api/v1/currency
