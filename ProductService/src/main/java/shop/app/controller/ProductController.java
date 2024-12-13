@@ -10,25 +10,27 @@ import shop.app.dto.CreateProductRequest;
 import shop.app.dto.ProductDto;
 import shop.app.dto.ProductResponseDto;
 import shop.app.dto.UpdateProductDto;
+import shop.app.dto.criteria.SearchCriteria;
 import shop.app.mapper.ProductMapper;
 import shop.app.service.ProductService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/product")
+@RequestMapping("api/v1/")
 public class ProductController {
     private final ProductMapper productMapper;
     private final ProductService productService;
 
-    @PostMapping("/")
+    @PostMapping("/products")
     public ResponseEntity<UUID> createProduct(@RequestBody CreateProductRequest createProductDto) {
         ProductDto productDto = productMapper.toProductDto(createProductDto);
         return ResponseEntity.ok(productService.createProduct(productDto));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/products/{productId}")
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID productId) {
         return ResponseEntity.ok(productService.getProductByUUID(productId));
     }
@@ -39,14 +41,20 @@ public class ProductController {
                 .map(productMapper::toProductResponseDto));
     }
 
-    @PutMapping("/")
+    @PutMapping("/products")
     public ResponseEntity<Void> updateProduct(@RequestBody UpdateProductDto updateProductDto) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/products/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/products/search")
+    public ResponseEntity<Page<ProductResponseDto>> searchProductByCriteria(@RequestBody List<SearchCriteria> list,
+                                                                            @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProductsByCriteria(list, pageable));
     }
 }
