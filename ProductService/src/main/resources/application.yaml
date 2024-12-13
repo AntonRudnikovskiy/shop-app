@@ -33,5 +33,6 @@ exchange-rate:
 currency-service:
   host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
   retry: 3
+  timeout: 1000
   methods:
     get-currency: /api/v1/currency

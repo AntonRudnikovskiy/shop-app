@@ -18,7 +18,7 @@ public class WebClientConfiguration {
     @Value("${currency-service.host}")
     private String host;
     @Value("${currency-service.timeout}")
-    public int timeout = 1000;
+    public int timeout;
 
     @Bean
     public WebClient webClientWithTimeout() {
