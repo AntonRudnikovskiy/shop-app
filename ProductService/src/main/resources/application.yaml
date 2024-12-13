@@ -25,3 +25,14 @@ app:
     enable: false
     priceIncreasePercentage: 1.4
     optimization: false
+
+exchange-rate:
+  file-name: exchange-rate.json
+  base-rate: 100.0
+
+currency-service:
+  host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
+  retry: 3
+  timeout: 1000
+  methods:
+    get-currency: /api/v1/currency
