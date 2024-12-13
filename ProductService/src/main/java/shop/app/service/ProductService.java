@@ -63,7 +63,6 @@ public class ProductService {
     public Page<ProductResponseDto> getAllProductsByCriteria(List<SearchCriteria> searchCriteria, Pageable pageable) {
         Specification<ProductEntity> specification = ((root, query, criteriaBuilder) ->
                 searchSpecification.createQueryBySearchCriteria(root, criteriaBuilder, query, searchCriteria));
-        return productRepository.findAll(specification, pageable)
-                .map(productMapper::toProductResponseDto);
+        return productRepository.findAll(specification, pageable).map(productMapper::toProductResponseDto);
     }
 }
