@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-ordered-product-table" author="Me">
+        <createTable tableName="ordered_product">
+            <column name="order_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frozen_price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-composite-primary-key-ordered-product" author="Me">
+        <addPrimaryKey tableName="ordered_product"
+                       columnNames="order_id, product_id"
+                       constraintName="pk_ordered_product"/>
+    </changeSet>
+
+    <changeSet id="add-fk-ordered-product-orders" author="Me">
+        <addForeignKeyConstraint baseTableName="ordered_product"
+                                 baseColumnNames="order_id"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="uuid"
+                                 constraintName="fk_ordered_product_orders"/>
+    </changeSet>
+
+    <changeSet id="add-fk-ordered-product-products" author="Me">
+        <addForeignKeyConstraint baseTableName="ordered_product"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="products"
+                                 referencedColumnNames="uuid"
+                                 constraintName="fk_ordered_product_products"/>
+    </changeSet>
+</databaseChangeLog>
