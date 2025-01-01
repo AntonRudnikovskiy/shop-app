@@ -1,4 +1,4 @@
-package shop.app.dto;
+package shop.app.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

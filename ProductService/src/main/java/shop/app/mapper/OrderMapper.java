@@ -1,7 +1,7 @@
 package shop.app.mapper;
 
 import org.springframework.stereotype.Component;
-import shop.app.dto.ProductInfo;
+import shop.app.dto.product.ProductInfo;
 import shop.app.dto.order.CreateOrderRequest;
 import shop.app.dto.order.OrderResponseDto;
 import shop.app.dto.order.OrderedProductsDto;

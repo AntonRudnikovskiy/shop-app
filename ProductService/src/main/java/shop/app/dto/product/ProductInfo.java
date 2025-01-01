@@ -1,6 +1,5 @@
-package shop.app.dto;
+package shop.app.dto.product;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class ProductInfo {
-    @NotBlank
+    @NotNull
     private UUID productId;
     @NotNull
     private Long quantity;

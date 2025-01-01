@@ -2,9 +2,9 @@ package shop.app.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import shop.app.dto.CreateProductRequest;
-import shop.app.dto.ProductDto;
-import shop.app.dto.ProductResponseDto;
+import shop.app.dto.product.CreateProductRequest;
+import shop.app.dto.product.ProductDto;
+import shop.app.dto.product.ProductResponseDto;
 import shop.app.entity.CurrencyType;
 import shop.app.entity.ProductEntity;
 import shop.app.service.currency.CurrencyService;

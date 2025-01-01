@@ -9,13 +9,13 @@ import shop.app.exception.ProductNotFoundException;
 @Component
 public class OrderValidator {
     public void validateProduct(ProductEntity product) {
-        if (product != null) {
+        if (product == null) {
             throw new ProductNotFoundException();
         }
     }
 
     public void validateProductAvailability(ProductEntity product) {
-        if (product.getIsAvailable()) {
+        if (!product.getIsAvailable()) {
             throw new ProductNotAvailableException();
         }
     }
@@ -34,7 +34,7 @@ public class OrderValidator {
 
     public void validateOrderAccess(Long customerId, OrderEntity orderEntity) {
         if (!orderEntity.getCustomer().getId().equals(customerId)) {
-            throw new RuntimeException();
+                throw new RuntimeException();
         }
     }
 }
