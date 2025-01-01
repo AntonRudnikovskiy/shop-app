@@ -16,6 +16,9 @@
             <column name="status" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="delivery_address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_at" type="DATE">
                 <constraints nullable="false"/>
             </column>

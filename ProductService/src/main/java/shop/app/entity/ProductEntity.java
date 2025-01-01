@@ -8,6 +8,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +33,9 @@ public class ProductEntity {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderedProductEntity> orderedProducts;
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)

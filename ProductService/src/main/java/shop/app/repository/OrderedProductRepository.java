@@ -6,6 +6,6 @@ import shop.app.entity.OrderedProductEntity;
 
 import java.util.UUID;
 
-//@Repository
-//public interface OrderedProductRepository extends JpaRepository<OrderedProductEntity, UUID> {
-//}
+@Repository
+public interface OrderedProductRepository extends JpaRepository<OrderedProductEntity, UUID> {
+}

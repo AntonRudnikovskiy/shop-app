@@ -1,4 +1,4 @@
-package shop.app.dto;
+package shop.app.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDto {
+public class CreateProductRequest {
     private String article;
     private String name;
     private String description;

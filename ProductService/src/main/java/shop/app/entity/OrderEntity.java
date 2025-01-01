@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,9 +27,15 @@ public class OrderEntity {
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderedProductEntity> orderedProducts;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @Column(name = "delivery_address", nullable = false)
+    private String deliveryAddress;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
