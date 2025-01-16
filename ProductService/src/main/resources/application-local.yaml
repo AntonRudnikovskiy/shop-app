@@ -39,9 +39,16 @@ exchange-rate:
   file-name: exchange-rate.json
 
 
-currency-service:
-  host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
-  timeout: 1000
+webclient:
   retry: 3
-  methods:
+  currency-service:
+    host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
     get-currency: /api/v1/currency
+
+  account-service:
+    host: ${ACCOUNT_SERVICE_HOST:http://localhost:8082}
+    get-account: /api/v1/account
+
+  crm-service:
+    host: ${CRM_SERVICE_HOST:http://localhost:8083}
+    get-crm: /api/v1/crm

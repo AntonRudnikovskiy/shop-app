@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-deployment
+  labels:
+    app: account-app
+spec:
+  strategy:
+    type: Recreate
+  replicas: 3
+  selector:
+    matchLabels:
+      app: account-app
+  template:
+    metadata:
+      labels:
+        app: account-app
+    spec:
+      containers:
+        - name: account-app
+          image: unkindledone/account_service:latest
+          ports:
+            - containerPort: 8082
+              name: account-app
+          livenessProbe:
+            httpGet:
+              port: 8082
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: 8082
+              path: /actuator/health/readiness
+            failureThreshold: 1
+            periodSeconds: 10

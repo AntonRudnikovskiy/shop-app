@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.app.dto.order.*;
 import shop.app.service.OrderService;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -37,6 +38,12 @@ public class OrderController {
                                                      @PathVariable("orderId") UUID orderId
     ) {
         OrderResponseDto orderRequest = orderService.getOrderByCustomerId(customerId, orderId);
+        return ResponseEntity.ok(orderRequest);
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<Map<UUID, OrderInfo>> getGroupCustomerOrders() {
+        Map<UUID, OrderInfo> orderRequest = orderService.getGroupCustomerOrdersByProductId();
         return ResponseEntity.ok(orderRequest);
     }
 

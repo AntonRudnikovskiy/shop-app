@@ -4,12 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.app.dto.CustomerInfo;
 import shop.app.dto.order.CreateOrderRequest;
+import shop.app.dto.order.OrderInfo;
 import shop.app.dto.order.OrderResponseDto;
 import shop.app.dto.order.StatusRequest;
 import shop.app.dto.order.UpdateOrderRequest;
 import shop.app.dto.product.ProductInfo;
-import shop.app.entity.*;
+import shop.app.entity.CustomerEntity;
+import shop.app.entity.OrderEntity;
+import shop.app.entity.OrderStatus;
+import shop.app.entity.OrderedProductEntity;
+import shop.app.entity.ProductEntity;
 import shop.app.exception.OrderNotFoundException;
 import shop.app.exception.OrderUpdateException;
 import shop.app.exception.ProductNotFoundException;
@@ -24,6 +30,7 @@ import shop.app.validator.OrderValidator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,6 +43,8 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final OrderMapper orderMapper;
     private final OrderValidator orderValidator;
+    private final AccountServiceClient accountServiceClient;
+    private final CrmServiceClient crmServiceClient;
 
     @Transactional
     public UUID createOrder(Long customerId, CreateOrderRequest orderRequest) {
@@ -123,6 +132,37 @@ public class OrderService {
                         .build()
                 ).collect(Collectors.toList());
         return orderMapper.toOrderResponseDto(productsView, orderId);
+    }
+
+    @Transactional
+    public Map<UUID, OrderInfo> getGroupCustomerOrdersByProductId() {
+        List<OrderEntity> orderEntity = orderRepository.findAllOrdersByStatusIn(
+                List.of(OrderStatus.CREATED, OrderStatus.CONFIRMED));
+
+        List<String> customerLogins = orderEntity.stream()
+                .map(order -> order.getCustomer().getLogin())
+                .distinct()
+                .toList();
+
+        CompletableFuture<Map<String, Integer>> accountNumber = accountServiceClient.getCustomerAccountNumber(customerLogins);
+        CompletableFuture<Map<String, Integer>> inn = crmServiceClient.getCustomerAccountNumber(customerLogins);
+        return CompletableFuture.allOf(accountNumber, inn).thenApply(result -> orderEntity.stream()
+                        .flatMap(order -> order.getOrderedProducts().stream()
+                                .map(orderedProduct ->
+                                        Map.entry(orderedProduct.getProduct().getUuid(), OrderInfo.builder()
+                                                .id(orderedProduct.getOrder().getUuid())
+                                                .customer(CustomerInfo.builder()
+                                                        .id(orderedProduct.getOrder().getCustomer().getId())
+                                                        .accountNumber(accountNumber.join().get(order.getCustomer().getLogin()))
+                                                        .email(orderedProduct.getOrder().getCustomer().getEmail())
+                                                        .inn(inn.join().get(order.getCustomer().getLogin()))
+                                                        .build())
+                                                .status(orderedProduct.getOrder().getOrderStatus())
+                                                .deliveryAddress(orderedProduct.getOrder().getDeliveryAddress())
+                                                .quantity(orderedProduct.getQuantity())
+                                                .build())))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .join();
     }
 
     @Transactional
