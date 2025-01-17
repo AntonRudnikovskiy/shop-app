@@ -1,0 +1,3 @@
+FROM openjdk:17
+ADD build/libs/AccountService-0.0.1-SNAPSHOT.jar AccountService-0.0.1.jar
+ENTRYPOINT ["java","-jar","AccountService.jar"]

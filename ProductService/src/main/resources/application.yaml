@@ -6,19 +6,27 @@ spring:
     name: ShopApp
 
   datasource:
-   username: user
-   password: ${PWD}
-   url: jdbc:postgresql://localhost:5432/postgres
-   driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    url: jdbc:postgresql://postgres-service:5433/postgres
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
     enabled: false
+
+  interaction:
+    product:
+      uri: ${PRODUCT_URI:http://product-service:8081}
+    crm:
+      uri: ${CRM_URI:http://crm-service:8083}
+    account:
+      uri: ${ACCOUNT_URI:http://account-service:8082}
 
 app:
   scheduling:
@@ -30,9 +38,31 @@ exchange-rate:
   file-name: exchange-rate.json
   base-rate: 100.0
 
-currency-service:
-  host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+
+webclient:
   retry: 3
-  timeout: 1000
-  methods:
+  currency-service:
+    host: ${CURRENCY_SERVICE_HOST:http://localhost:8080}
     get-currency: /api/v1/currency
+
+  account-service:
+    host: ${ACCOUNT_SERVICE_HOST:http://localhost:8082}
+    get-account: /api/v1/account
+
+  crm-service:
+    host: ${CRM_SERVICE_HOST:http://localhost:8083}
+    get-crm: /api/v1/crm

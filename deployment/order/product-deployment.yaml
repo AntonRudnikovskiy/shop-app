@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-deployment
+  labels:
+    app: product-app
+spec:
+  strategy:
+    type: Recreate
+  replicas: 3
+  selector:
+    matchLabels:
+      app: product-app
+  template:
+    metadata:
+      labels:
+        app: product-app
+    spec:
+      containers:
+        - name: product-app
+          image: unkindledone/product-service:v7
+          ports:
+            - containerPort: 8081
+              name: product-app
+          livenessProbe:
+            httpGet:
+              port: 8081
+              path: /actuator/health/liveness
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: 8081
+              path: /actuator/health/readiness
+            initialDelaySeconds: 20
+            failureThreshold: 1
+            periodSeconds: 10
+
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: DATABASE_URL
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: DATABASE_NAME
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: SPRING_DATASOURCE_PASSWORD

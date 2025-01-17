@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
+import shop.app.config.properties.CurrencyServiceProperties;
 import shop.app.entity.CurrencyRates;
 import shop.app.exception.CurrencyServiceException;
 
@@ -18,17 +19,16 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class ExchangeRateCache {
-    @Value("${currency-service.methods.get-currency}")
-    private String uri;
-    @Value("${currency-service.retry}")
+    @Value("${webclient.retry}")
     private int retry;
-    private final WebClient webClient;
+    private final WebClient currencyServiceWebClient;
+    private final CurrencyServiceProperties properties;
 
     @Cacheable(value = "currencyRates")
     public Mono<CurrencyRates> getCurrencyRates() {
-        return webClient
+        return currencyServiceWebClient
                 .get()
-                .uri(uri)
+                .uri(properties.getGetCurrency())
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError,
                         response -> response.bodyToMono(String.class)
