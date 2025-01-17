@@ -4,7 +4,7 @@ metadata:
   name: postgres-configmap
 data:
   DATABASE_NAME: postgres
-  DATABASE_URL: jdbc:postgresql://localhost:5433/postgres
+  DATABASE_URL: jdbc:postgresql://postgres-service:5433/postgres
   DATABASE_SCHEMA: public
   SPRING_DATASOURCE_USERNAME: "admin"
   SPRING_DATASOURCE_PASSWORD: "password"

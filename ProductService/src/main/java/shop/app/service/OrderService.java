@@ -5,17 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.app.dto.CustomerInfo;
-import shop.app.dto.order.CreateOrderRequest;
-import shop.app.dto.order.OrderInfo;
-import shop.app.dto.order.OrderResponseDto;
-import shop.app.dto.order.StatusRequest;
-import shop.app.dto.order.UpdateOrderRequest;
+import shop.app.dto.order.*;
 import shop.app.dto.product.ProductInfo;
-import shop.app.entity.CustomerEntity;
-import shop.app.entity.OrderEntity;
-import shop.app.entity.OrderStatus;
-import shop.app.entity.OrderedProductEntity;
-import shop.app.entity.ProductEntity;
+import shop.app.entity.*;
 import shop.app.exception.OrderNotFoundException;
 import shop.app.exception.OrderUpdateException;
 import shop.app.exception.ProductNotFoundException;
@@ -90,7 +82,7 @@ public class OrderService {
                 .map(product -> {
                     List<ProductEntity> productEntities = orderEntity.getOrderedProducts().stream()
                             .map(OrderedProductEntity::getProduct)
-                            .collect(Collectors.toList());
+                            .toList();
 
                     ProductEntity productEntity = productEntities.stream()
                             .filter(p -> p.getUuid().equals(product.getProductId()))
@@ -109,7 +101,7 @@ public class OrderService {
                             product, productEntity);
                     productEntity.setQuantity(productEntity.getQuantity() - product.getQuantity());
                     return orderedProductEntity;
-                }).collect(Collectors.toList());
+                }).toList();
 
         orderEntity.getOrderedProducts().addAll(newOrderedProducts);
         orderRepository.save(orderEntity);
@@ -144,8 +136,16 @@ public class OrderService {
                 .distinct()
                 .toList();
 
-        CompletableFuture<Map<String, Integer>> accountNumber = accountServiceClient.getCustomerAccountNumber(customerLogins);
-        CompletableFuture<Map<String, Integer>> inn = crmServiceClient.getCustomerAccountNumber(customerLogins);
+        CompletableFuture<Map<String, Integer>> accountNumber = accountServiceClient.getCustomerAccountNumber(customerLogins)
+                .exceptionally(ex -> {
+                    log.error("Failed to fetch account numbers", ex);
+                    return Map.of();
+                });
+        CompletableFuture<Map<String, Integer>> inn = crmServiceClient.getCustomerAccountNumber(customerLogins)
+                .exceptionally(ex -> {
+                    log.error("Failed to fetch inn", ex);
+                    return Map.of();
+                });
         return CompletableFuture.allOf(accountNumber, inn).thenApply(result -> orderEntity.stream()
                         .flatMap(order -> order.getOrderedProducts().stream()
                                 .map(orderedProduct ->
@@ -153,9 +153,9 @@ public class OrderService {
                                                 .id(orderedProduct.getOrder().getUuid())
                                                 .customer(CustomerInfo.builder()
                                                         .id(orderedProduct.getOrder().getCustomer().getId())
-                                                        .accountNumber(accountNumber.join().get(order.getCustomer().getLogin()))
+                                                        .accountNumber(accountNumber.join().getOrDefault(order.getCustomer().getLogin(), null))
                                                         .email(orderedProduct.getOrder().getCustomer().getEmail())
-                                                        .inn(inn.join().get(order.getCustomer().getLogin()))
+                                                        .inn(inn.join().getOrDefault(order.getCustomer().getLogin(), null))
                                                         .build())
                                                 .status(orderedProduct.getOrder().getOrderStatus())
                                                 .deliveryAddress(orderedProduct.getOrder().getDeliveryAddress())

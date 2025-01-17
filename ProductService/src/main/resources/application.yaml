@@ -51,7 +51,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "health,info,metrics"
 
 webclient:
   retry: 3
