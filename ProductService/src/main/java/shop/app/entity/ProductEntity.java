@@ -50,6 +50,9 @@ public class ProductEntity {
     @Column(name = "is_available", columnDefinition = "boolean default true")
     private Boolean isAvailable;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImageEntity> productImages;
+
     @CreationTimestamp
     @Column(name = "last_quantity_change", nullable = false)
     private LocalDateTime lastQuantityChange;

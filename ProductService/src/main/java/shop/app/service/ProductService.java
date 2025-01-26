@@ -39,7 +39,6 @@ public class ProductService {
         return productEntity.getUuid();
     }
 
-    @Transactional(readOnly = true)
     public ProductResponseDto getProductByUUID(UUID uuid) {
         ProductEntity productEntity = productRepository.findById(uuid).orElseThrow(() -> new RuntimeException());
         return productMapper.toProductResponseDto(productEntity);
