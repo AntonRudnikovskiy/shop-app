@@ -1,20 +1,25 @@
 server:
   port: 8081
 
+  tomcat:
+    threads:
+      max: 200
+
 spring:
   application:
     name: ShopApp
 
   datasource:
-    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
-    url: jdbc:postgresql://postgres-service:5433/postgres
+    url: jdbc:postgresql://localhost:5432/postgres
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
 
   liquibase:
     change-log: classpath:db/changelog/changelog.xml
@@ -37,6 +42,12 @@ app:
 exchange-rate:
   file-name: exchange-rate.json
   base-rate: 100.0
+
+minio:
+  bucket: corpbucket
+  host: http://localhost:9000
+  accessKey: pf6bFTJlM6WfiMJpEwrM
+  secretKey: zwoqG79bPITO0csnmSplqtvVOcUm4a7zXGoQzjj0
 
 management:
   endpoint:

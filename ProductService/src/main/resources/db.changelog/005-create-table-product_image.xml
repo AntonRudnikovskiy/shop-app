@@ -1,0 +1,29 @@
+<changeSet id="001-create-product-image-table" author="Me">
+    <createTable tableName="product_image">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="image_name" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="product_id" type="BIGINT">
+            <constraints nullable="true"/>
+        </column>
+        <column name="image_url" type="VARCHAR(255)">
+            <constraints nullable="true"/>
+        </column>
+        <column name="created_at" type="DATE">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+
+    <addForeignKeyConstraint baseTableName="product_image"
+                             baseColumnNames="product_id"
+                             referencedTableName="product"
+                             referencedColumnNames="id"
+                             constraintName="fk_product_image_product"/>
+
+    <createIndex tableName="product_image" indexName="idx_product_image_product">
+        <column name="product_id"/>
+    </createIndex>
+</changeSet>
